@@ -92,6 +92,18 @@ bailey jira comment --key OPS-42 --body "Deployed to UAT." --dry-run
 cp -r skills/bailey-confluence ~/.claude/skills/
 ```
 
+## Why not just curl?
+
+Fair question — it's all REST underneath, and an agent *can* call the API raw. It just does it badly, expensively, and dangerously:
+
+- **Dangerously.** Confluence's update API makes you fetch the version, increment it, and resend the body — and accepts whatever you send. Agent reads v7, a human edits to v8, agent writes v9: the human's edit is silently gone. Raw curl has no defense. `--expect-version` refuses that write (exit 5). Tokens improvised into curl commands also land in shell history and logs; bailey only reads them from env.
+- **Expensively.** Every raw session, the agent re-derives endpoints, cloud-vs-DC auth, the `/wiki` quirk, storage-format payloads, and 429 handling — hundreds of tokens to rebuild a fragile incantation, every time. With bailey it's one short, identical command; the API fiddliness is paid for once, in the tool.
+- **Unreliably.** Parsing raw output means improvised error recovery. JSON-always plus stable exit codes (0/1/3/4/5) means the agent *branches* instead of *interprets*: exit 5 → re-read and retry once; exit 3 → stop and ask a human.
+
+Agents don't strictly need `kubectl` either — Kubernetes is just REST too. Nobody sane lets an agent curl the API server. Good CLIs are how APIs become safe and cheap to operate; agents deserve one built for them.
+
+(If you're a human scripting Confluence on an unrestricted machine, curl or the existing Atlassian libraries are genuinely fine — bailey's edge there is only the zero-dependency install. The full value appears when the operator is an **agent** on a **locked-down box**.)
+
 ## Design principles
 
 1. **Zero dependencies is a feature, not a constraint.** Every dependency is a procurement conversation on a corporate machine.
