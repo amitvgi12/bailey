@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bailey-bridge"
+version = "0.1.0"
+description = "Portable, zero-dependency bridges that let AI agents operate enterprise APIs (Confluence, Jira) from any locked-down environment."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Amit Kumar" }]
+keywords = ["ai-agents", "confluence", "jira", "cli", "devops", "claude"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+]
+
+[project.scripts]
+bailey = "bailey.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["bailey*"]
