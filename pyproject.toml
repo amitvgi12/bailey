@@ -18,6 +18,12 @@ classifiers = [
   "Intended Audience :: Developers",
 ]
 
+[project.urls]
+Homepage = "https://github.com/amitvgi12/bailey"
+Repository = "https://github.com/amitvgi12/bailey"
+Changelog = "https://github.com/amitvgi12/bailey/blob/main/CHANGELOG.md"
+Issues = "https://github.com/amitvgi12/bailey/issues"
+
 [project.scripts]
 bailey = "bailey.__main__:main"
 
